@@ -1,20 +1,22 @@
 build_docker()
 {
   echo "building docker "
-  docker build -t "sciassit-img" -f docker/Dockerfile .
+  docker build -t "yamenajjour/sciassist-img" -f scirag/docker/Dockerfile .
 }
 
 run_docker()
 {
   echo "runing docker "
   echo "$FAST_API_PORT"
-  docker run -dit --rm -v "$(pwd)":/sciassit -p 80:80 -w /sciassit --name "sciassit-cnt" --tty "sciassit-img"
+  docker run -it --rm -v "$(pwd)":/sciassit  -p 80:80 -w /sciassit --name "sciassist-cnt" --tty "yamenajjour/sciassist-img"
+
 }
 
 run_service()
 {
   echo "running service"
   docker exec -it "sciassit-cnt" uvicorn api:app --host 0.0.0.0 --port 80
+
 }
 
 push_docker()
@@ -24,5 +26,5 @@ push_docker()
 
 build_docker
 run_docker
-run_service
+#run_service
 

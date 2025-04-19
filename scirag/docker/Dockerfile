@@ -1,3 +1,5 @@
-FROM python:3.12
-RUN pip install VLLM langchain faiss-cpu sentence-transformers fastapi[standard]
-
+FROM langchain/langchain
+WORKDIR /sciassist
+COPY . /sciassist
+RUN pip install faiss-cpu fastapi[standard] pandas tqdm vllm
+CMD ["fastapi", "run", "/sciassist/scirag/setup_api.py", "--port", "80"]
