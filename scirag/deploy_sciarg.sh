@@ -22,6 +22,7 @@ run_service()
 push_docker()
 {
   docker login
+  docker push "yamenajjour/sciassist-img"
 }
 
 build_docker
