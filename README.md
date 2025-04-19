@@ -12,9 +12,8 @@ To deploy the Retrieval Augmented Generation pipeline via clli which allows you 
 can run the following
 
 ```
-python setup_rag.py --debug --path-index data/index --path-dataset data/acl-publication-info.74k.parquet 
---path-model /bigwork/nhwpajjy/pre-trained-models/DeepSeek-R1-Distill-Qwen-1.5B
-
+python scirag/setup_rag.py --debug --path-index data/index --path-dataset data/acl-publication-info.74k.parquet
+  --path-model /bigwork/nhwpajjy/pre-trained-models/DeepSeek-R1-Distill-Qwen-1.5B
 ```
 
 adding debug will create an index of only 100 papers for debugging purposes
@@ -27,12 +26,7 @@ adding debug will create an index of only 100 papers for debugging purposes
 
 The web service can be then accessed as follows 
 
-1. Initiliaize the system by call the endpoint
-
-```
-http://127.0.0.1:8000/
-```
-2.Start chatting
+1.
 ```
 http://127.0.0.1:8000/chat?q= What are typical software designs of RAG   
 ```

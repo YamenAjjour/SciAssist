@@ -2,11 +2,11 @@ from typing import Union
 from setup_rag import *
 from fastapi import FastAPI
 
-app = FastAPI()
 
-chain = None
 
-@app.get("/")
+
+
+
 def init_ragchain():
     global chain
     path_index = "data/index"
@@ -18,7 +18,10 @@ def init_ragchain():
 
     chain = create_rag_pipeline(path_dataset, path_model)
 
+chain = None
+init_ragchain()
 
+app = FastAPI()
 
 @app.get("/chat")
 def read_item(q: Union[str, None] = None):
