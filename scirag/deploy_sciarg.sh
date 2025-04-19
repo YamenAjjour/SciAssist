@@ -15,7 +15,7 @@ run_docker()
 run_service()
 {
   echo "running service"
-  docker exec -it "sciassit-cnt" uvicorn api:app --host 0.0.0.0 --port 80
+  docker exec -it "yamenajjour/sciassit-cnt" uvicorn api:app --host 0.0.0.0 --port 80
 
 }
 
@@ -26,5 +26,4 @@ push_docker()
 
 build_docker
 run_docker
-#run_service
 
