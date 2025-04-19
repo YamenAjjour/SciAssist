@@ -10,7 +10,7 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain.llms import VLLM
 from tqdm import tqdm
-
+from argparse import *
 embedding_model_id = "BAAI/bge-small-en-v1.5"
 
 def create_llm(path_model: Path):
@@ -26,9 +26,11 @@ def create_llm(path_model: Path):
 
     return llm
 
-def create_index(path_dataset: Path, path_index: Path):
+def create_index(path_dataset: Path, path_index: Path, debug: bool):
     print("creating index")
     df = pd.read_parquet(path_dataset)
+    if debug:
+        df = df.sample(100)
     splitter = RecursiveCharacterTextSplitter(chunk_size=256, chunk_overlap=0)
     all_chunks = []
     for _, paper in tqdm(df.iterrows()):
@@ -65,25 +67,35 @@ def return_prompt():
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     return prompt
 
-def create_rag_pipeline(path_index: Path, path_model: Path):
+def create_rag_pipeline(path_index: Path, path_model: Path, debug:bool=False):
     print("creating rag pipeline")
     llm = create_llm(path_model)
-    embeddings_db = load_index(path_index)
+    embeddings_db = load_index(path_index, debug)
     prompt = return_prompt()
     retriever = embeddings_db.as_retriever(search_kwargs={"k": 10})
     chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs={"prompt":prompt})
     return chain
 
+def create_args():
+    parser = ArgumentParser()
+    parser.add_argument("--debug", action="store_true")
+    parser.add_argument("--path-model", type=str, required=True)
+    parser.add_argument("--path-dataset", type=str)
+    parser.add_argument("--path-index", type=str, required=True)
+
+    return parser.parse_args()
 
 if __name__ == "__main__":
-    path_index = "data/index"
-    path_dataset = "data/acl-publication-info.74k.parquet"
-    path_model = "/bigwork/nhwpajjy/pre-trained-models/DeepSeek-R1-Distill-Qwen-1.5B"
+    args = create_args()
+    debug = args.debug
+    path_model = args.path_model
+    path_index = args.path_index
+    path_dataset = args.path_dataset
 
     if not os.path.exists(path_index):
-        create_index( path_dataset=path_dataset, path_index=path_index)
+        create_index( path_dataset=path_dataset, path_index=path_index, debug=debug)
 
-    chain = create_rag_pipeline(path_dataset, path_model)
+    chain = create_rag_pipeline(path_dataset, path_model, debug)
 
     while True:
         query = input("Enter query or exit to exit:")

@@ -12,9 +12,12 @@ To deploy the Retrieval Augmented Generation pipeline via clli which allows you 
 can run the following
 
 ```
-python setup_rag.py
+python setup_rag.py --debug --path-index data/index --path-dataset data/acl-publication-info.74k.parquet 
+--path-model /bigwork/nhwpajjy/pre-trained-models/DeepSeek-R1-Distill-Qwen-1.5B
 
 ```
+
+adding debug will create an index of only 100 papers for debugging purposes
 
 ### Locally as a web service
 

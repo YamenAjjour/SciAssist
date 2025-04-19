@@ -1,0 +1,6 @@
+{
+  path_index : "data/index",
+  path_dataset : "data/acl-publication-info.74k.parquet",
+  path_model : "/bigwork/nhwpajjy/pre-trained-models/DeepSeek-R1-Distill-Qwen-1.5B"
+
+}
