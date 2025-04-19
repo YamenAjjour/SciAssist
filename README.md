@@ -25,8 +25,6 @@ adding debug will create an index of only 100 papers for debugging purposes
 ```
 
 The web service can be then accessed as follows 
-
-1.
 ```
 http://127.0.0.1:8000/chat?q= What are typical software designs of RAG   
 ```
