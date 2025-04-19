@@ -11,7 +11,7 @@ def init_ragchain():
     global chain
     path_index = "data/index"
     path_dataset = "data/acl-publication-info.74k.parquet"
-    path_model = "/bigwork/nhwpajjy/pre-trained-models/DeepSeek-R1-Distill-Qwen-1.5B"
+    path_model = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
 
     if not os.path.exists(path_index):
         create_index( path_dataset=path_dataset, path_index=path_index)
