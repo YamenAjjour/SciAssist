@@ -1,12 +1,35 @@
 # SciAssist
 
 This is a research assistants for NLP Researchers that is implemented using Retrieval Augmented Generation. It uses
-DeepSeek-R1-Distill-Qwen-1.5B as a backbone to answer questions on scientific NLP Papers.
+DeepSeek-R1-Distill-Qwen-1.5B as a backbone to answer questions on scientific NLP Papers. The paper pool that the underlines 
+the rag system contains 72k papers from the [ACL Anthology](https://github.com/shauryr/ACL-anthology-corpus?tab=readme-ov-file).
 
-### Deployment
-To deploy the Retrieval Augmented Generation pipeline which allows you to chat with the interface via command line you 
+# Deployment
+
+
+### Locally using CLI
+To deploy the Retrieval Augmented Generation pipeline via clli which allows you to chat with the interface via command line you 
 can run the following
 
 ```
+python setup_rag.py
+
+```
+
+### Locally as a web service
+
+```
 ./sciarg/deploy_sciarg.sh
+```
+
+The web service can be then accessed as follows 
+
+1. Initiliaize the system by call the endpoint
+
+```
+http://127.0.0.1:8000/
+```
+2.Start chatting
+```
+http://127.0.0.1:8000/chat?q= What are typical software designs of RAG   
 ```
