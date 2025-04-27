@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0fd8ae4a-86cc-4b65-9a35-d2486765ada2" name="Changes" comment="- changed docker setup to in-dockerfile">
+      <change afterPath="$PROJECT_DIR$/scirag/docker-base/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scirag/setup_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/scirag/setup_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scirag/deploy_sciarg.sh" beforeDir="false" afterPath="$PROJECT_DIR$/scirag/deploy_sciarg.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scirag/docker/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/scirag/docker/Dockerfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,15 +26,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.setup_rag.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.setup_rag.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "/home/yamen/projects/sciassist/scirag/docker"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/scirag/docker" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/scirag/docker-base" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="setup_rag" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="sciassist" />
@@ -182,7 +193,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745767255178</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="- changed docker setup to in-dockerfile">
+      <option name="closed" value="true" />
+      <created>1745767934445</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1745767934445</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
