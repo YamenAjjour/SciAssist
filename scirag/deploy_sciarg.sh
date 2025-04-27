@@ -26,5 +26,6 @@ push_docker()
 }
 
 build_docker
+push_docker
 run_docker
 

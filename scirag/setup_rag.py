@@ -1,7 +1,7 @@
 import os.path
 
 import pandas as pd
-import torch
+
 from langchain.vectorstores import FAISS
 
 from pathlib import Path
@@ -21,7 +21,9 @@ def create_llm(path_model: Path):
                max_new_tokens=10,
                top_k=10,
                top_p=0.95,
-               temperature=0.8,dtype=torch.float16
+               temperature=0.8,
+               dtype="float16",
+
                # tensor_parallel_size=... # for distributed inference
                )
 
@@ -47,11 +49,11 @@ def create_index(path_dataset: Path, path_index: Path, debug: bool):
     embeddings_db.save_local(path_index)
 
 def load_index(path_index: Path):
-    print("loading index")
+    print(f"loading index from {path_index}")
     embeddings = HuggingFaceEmbeddings(
         model_name=embedding_model_id,
     )
-    embeddings_db = FAISS.load_local(path_index, embeddings)
+    embeddings_db = FAISS.load_local(path_index, embeddings, allow_dangerous_deserialization=True)
     return embeddings_db
 
 def return_prompt():
@@ -96,7 +98,7 @@ if __name__ == "__main__":
     if not os.path.exists(path_index):
         create_index( path_dataset=path_dataset, path_index=path_index, debug=debug)
 
-    chain = create_rag_pipeline(path_dataset, path_model, debug)
+    chain = create_rag_pipeline(path_index, path_model, debug)
 
     while True:
         query = input("Enter query or exit to exit:")
