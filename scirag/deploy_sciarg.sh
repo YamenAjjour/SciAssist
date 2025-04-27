@@ -1,8 +1,15 @@
+build_docker_base()
+{
+  echo "building docker "
+  docker build -t "yamenajjour/sciassist-base-img" -f scirag/docker-base/Dockerfile .
+}
+
 build_docker()
 {
   echo "building docker "
   docker build -t "yamenajjour/sciassist-img" -f scirag/docker/Dockerfile .
 }
+
 
 run_docker()
 {
@@ -24,7 +31,7 @@ push_docker()
   docker login
   docker push "yamenajjour/sciassist-img"
 }
-
+build_docker_base
 build_docker
 push_docker
 run_docker
