@@ -34,7 +34,7 @@ def create_index(path_dataset: Path, path_index: Path, debug: bool):
     df = pd.read_parquet(path_dataset)
     if debug:
         df = df.sample(100)
-    splitter = RecursiveCharacterTextSplitter(chunk_size=256, chunk_overlap=0)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=1028, chunk_overlap=0)
     all_chunks = []
     for _, paper in tqdm(df.iterrows()):
         chunks = splitter.split_text(paper["full_text"])
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     path_dataset = args.path_dataset
 
     if not os.path.exists(path_index):
-        create_index( path_dataset=path_dataset, path_index=path_index, debug=debug)
+        create_index(path_dataset=path_dataset, path_index=path_index, debug=debug)
 
     chain = create_rag_pipeline(path_index, path_model, debug)
 
