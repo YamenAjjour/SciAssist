@@ -8,7 +8,7 @@ run_docker()
 {
   echo "runing docker "
   echo "$FAST_API_PORT"
-  docker run -it --rm -v "$(pwd)":/sciassit  -p 80:80 -w /sciassit --name "sciassist-cnt" --tty "yamenajjour/sciassist-img"
+  docker run -it --rm --gpus all -v "$(pwd)":/sciassit  -p 80:80 -w /sciassit --name "sciassist-cnt" --tty "yamenajjour/sciassist-img"
 
 }
 
