@@ -20,6 +20,10 @@ adding debug will create an index of only 100 papers for debugging purposes
 
 ### Locally as a web service
 
+
+fastapi run scirag/setup_api.py --port 80
+
+### Locally as a webservice using docker
 ```
 ./sciarg/deploy_sciarg.sh
 ```
