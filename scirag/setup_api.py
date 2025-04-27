@@ -14,9 +14,9 @@ def init_ragchain():
     path_model = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
 
     if not os.path.exists(path_index):
-        create_index( path_dataset=path_dataset, path_index=path_index)
+        create_index( path_dataset=path_dataset, path_index=path_index, debug=True)
 
-    chain = create_rag_pipeline(path_dataset, path_model)
+    chain = create_rag_pipeline(path_index, path_model, True)
 
 chain = None
 init_ragchain()
