@@ -1,6 +1,7 @@
 import os.path
 
 import pandas as pd
+import torch
 from langchain.vectorstores import FAISS
 
 from pathlib import Path
@@ -20,7 +21,7 @@ def create_llm(path_model: Path):
                max_new_tokens=10,
                top_k=10,
                top_p=0.95,
-               temperature=0.8,
+               temperature=0.8,dtype=torch.float16
                # tensor_parallel_size=... # for distributed inference
                )
 
