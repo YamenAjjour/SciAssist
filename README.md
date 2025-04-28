@@ -31,7 +31,7 @@ fastapi run scirag/setup_api.py --port 80
 
 The web service can be then accessed as follows 
 ```
-http://127.0.0.1:8000/chat?q= What are typical software designs of RAG   
+http://127.0.0.1:80/chat?q= What are typical software designs of RAG   
 ```
 
 or using curl 
