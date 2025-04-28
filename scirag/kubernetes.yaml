@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sciassist 
+spec:
+  volumes:
+    - name: tmp-vol
+      emptyDir: {}
+  containers:
+    - name: sciassist
+      image: yamenajjour/sciassist-img
+#      ports:
+#        - containerPort: 1234
+      resources:
+        limits:
+          nvidia.com/gpu: 1
+      command:
+      - 'sh'
+      - '-c'
+      - |
+         fastapi run /sciassist/scirag/setup_api.py --port 80
+      volumeMounts:
+      - name: tmp-vol
+        mountPath: /tempdata
+  tolerations:
+  - key: "special"
+    operator: "Equal"
+    value: "gpu"
+    effect: "NoSchedule"
+  - key: "special"
+    operator: "Equal"
+    value: "gpu"
+    effect: "NoExecute"
+  nodeSelector:
+    accelerator: nvidia-1080
+  runtimeClassName: nvidia

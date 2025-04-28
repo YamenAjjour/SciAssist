@@ -1,6 +1,6 @@
 # SciAssist
 
-This is a research assistants for NLP Researchers that is implemented using Retrieval Augmented Generation. It uses
+This is a research assistant for NLP Researchers that is implemented using Retrieval Augmented Generation. It uses
 DeepSeek-R1-Distill-Qwen-1.5B as a backbone to answer questions on scientific NLP Papers. The paper pool that the underlines 
 the rag system contains 72k papers from the [ACL Anthology](https://github.com/shauryr/ACL-anthology-corpus?tab=readme-ov-file).
 
