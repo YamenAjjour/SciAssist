@@ -18,8 +18,8 @@ def create_llm(path_model: Path):
     print("loading vllm")
     llm = VLLM(model=path_model,
                trust_remote_code=True,  # mandatory for hf models
-               max_new_tokens=10,
-               top_k=10,
+               max_new_tokens=300,
+               top_k=100,
                top_p=0.95,
                temperature=0.8,
                dtype="float16",
@@ -46,7 +46,7 @@ def create_index(path_dataset: Path, path_index: Path, debug: bool):
         model_name=embedding_model_id,
     )
     embeddings_db = FAISS.from_documents(all_chunks, embeddings)
-    embeddings_db.save_local(path_index)
+    embeddings_db.save_local(pathg_index)
 
 def load_index(path_index: Path):
     print(f"loading index from {path_index}")
@@ -57,15 +57,14 @@ def load_index(path_index: Path):
     return embeddings_db
 
 def return_prompt():
-    prompt_template = """<｜begin▁of▁sentence｜>
-    As a helpful scientific assistants, please answer the question below, focusing on numerical data and using only the context below.
+    prompt_template = """<|system|>As a helpful scientific assistants, please answer the question below, focusing on numerical data and using only the context below.
     Don't invent facts. If you can't provide a factual answer, say you don't know what the answer is.
-    <｜User｜>
+    <|user|>
     question: {question}
-    
     context: {context}
-    <｜Assistant｜>
+    <assistant>:
     """
+
 
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     return prompt
