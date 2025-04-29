@@ -32,5 +32,5 @@ spec:
     value: "gpu"
     effect: "NoExecute"
   nodeSelector:
-    accelerator: nvidia-a100
+    accelerator: nvidia-1080
   runtimeClassName: nvidia
