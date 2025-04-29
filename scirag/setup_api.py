@@ -14,7 +14,7 @@ def init_ragchain():
     path_model = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 
     if not os.path.exists(path_index):
-        create_index( path_dataset=path_dataset, path_index=path_index, debug=True)
+        create_index( path_dataset=path_dataset, path_index=path_index, debug=False)
 
     chain = create_rag_pipeline(path_index, path_model, True)
 

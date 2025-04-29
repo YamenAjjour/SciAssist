@@ -1,0 +1,2 @@
+IMAGE=yamenajjour/sciassist-img:13
+CONTAINER=sciassist

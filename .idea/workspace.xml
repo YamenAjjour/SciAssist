@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0fd8ae4a-86cc-4b65-9a35-d2486765ada2" name="Changes" comment="- changed docker setup to in-dockerfile">
+      <change afterPath="$PROJECT_DIR$/scirag/.deploy_variables" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scirag/deploy_scirag.sh" beforeDir="false" afterPath="$PROJECT_DIR$/scirag/deploy_scirag.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scirag/docker/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/scirag/docker/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/index/index.faiss" beforeDir="false" afterPath="$PROJECT_DIR$/data/index-debug/index.faiss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/index/index.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/index-debug/index.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scirag/setup_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/scirag/setup_api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scirag/setup_rag.py" beforeDir="false" afterPath="$PROJECT_DIR$/scirag/setup_rag.py" afterDir="false" />
     </list>
