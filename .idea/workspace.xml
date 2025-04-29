@@ -5,7 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0fd8ae4a-86cc-4b65-9a35-d2486765ada2" name="Changes" comment="- changed docker setup to in-dockerfile">
+      <change afterPath="$PROJECT_DIR$/scirag/deploy_scirag.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scirag/deploy_sciarg.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scirag/docker-base/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scirag/docker/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/scirag/docker/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scirag/kubernetes.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/scirag/kubernetes.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -246,7 +251,23 @@
       <option name="project" value="LOCAL" />
       <updated>1745912990568</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="- changed docker setup to in-dockerfile">
+      <option name="closed" value="true" />
+      <created>1745914298297</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1745914298297</updated>
+    </task>
+    <task id="LOCAL-00023" summary="- changed docker setup to in-dockerfile">
+      <option name="closed" value="true" />
+      <created>1745914373384</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1745914373384</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

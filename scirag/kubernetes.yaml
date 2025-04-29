@@ -8,7 +8,7 @@ spec:
       emptyDir: {}
   containers:
     - name: sciassist
-      image: yamenajjour/sciassist-img
+      image: yamenajjour/sciassist-img:9
 #      ports:
 #        - containerPort: 1234
       resources:
@@ -18,7 +18,17 @@ spec:
       - 'sh'
       - '-c'
       - |
-         fastapi run /sciassist/scirag/setup_api.py --port 80
+        python3 -c 'from langchain.llms import VLLM;llm = VLLM(model="deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+               trust_remote_code=True,  # mandatory for hf models
+               max_new_tokens=10,
+               top_k=10,
+               top_p=0.95,
+               temperature=0.8,
+               dtype="float16",
+
+               )'
+
+#         fastapi run /sciassist/scirag/setup_api.py --port 80
       volumeMounts:
       - name: tmp-vol
         mountPath: /tempdata
@@ -32,5 +42,5 @@ spec:
     value: "gpu"
     effect: "NoExecute"
   nodeSelector:
-    accelerator: nvidia-1080
+    accelerator: nvidia-a100
   runtimeClassName: nvidia
