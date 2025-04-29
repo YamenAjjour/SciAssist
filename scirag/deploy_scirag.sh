@@ -22,7 +22,7 @@ run_docker()
 run_service()
 {
   echo "running service"
-  docker exec -it "$CONTAINER" uvicorn api:app --host 0.0.0.0 --port 80
+  docker exec -it "$CONTAINER" --gpus all uvicorn api:app --host 0.0.0.0 --port 80
 
 }
 
