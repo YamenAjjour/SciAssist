@@ -11,7 +11,7 @@ def init_ragchain():
     global chain
     path_index = "data/index"
     path_dataset = "data/acl-publication-info.74k.parquet"
-    path_model = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
+    path_model = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 
     if not os.path.exists(path_index):
         create_index( path_dataset=path_dataset, path_index=path_index, debug=True)
@@ -28,5 +28,6 @@ def read_item(q: Union[str, None] = None):
     if not chain:
         return {"answer": "call /"}
     answer = chain.run({"query": q})
-    answer = answer.split("<｜Assistant｜>")[1]
+    print(answer)
+    #answer = answer.split("<assistant>:")[1]
     return {"answer": answer}
