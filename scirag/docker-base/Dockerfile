@@ -1,2 +1,2 @@
-FROM nvidia/cuda:12.4.0-runtime-ubuntu22.04
+FROM pytorch/pytorch:2.4.0-cuda12.4-cudnn9-devel
 RUN pip install langchain langchain-community faiss-cpu fastapi[standard] pandas tqdm vllm sentence-transformers
