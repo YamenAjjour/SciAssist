@@ -3,9 +3,9 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=12
 #SBATCH --mem=20G
-#SBATCH --time=96:00:00
-#SBATCH --output data/setup_rag.out
-#SBATCH --error data/setup_rag.err
+#SBATCH --time=24:00:00
+#SBATCH --output setup_rag.out
+#SBATCH --error setup_rag.err
 #SBATCH --gpus=1
 module load Miniforge3
 conda activate sciassist
