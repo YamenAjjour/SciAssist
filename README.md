@@ -38,8 +38,6 @@ or using curl
 ```
 curl curl http://127.0.0.1:80/chat?q=aaa
 ```
-<<<<<<< HEAD
-
 
 ### AWS
 ```
@@ -48,6 +46,3 @@ curl curl http://127.0.0.1:80/chat?q=aaa
 3) docker run -it --rm --gpus all -v "$(pwd)":/sciassit  -p 80:80 -w /sciassit --name "sciassist-cnt" --tty "sciassist-img:16"
 
 ```
-
-=======
->>>>>>> 9a2926b1027c6777dc90e12156bd58162a645d3e
