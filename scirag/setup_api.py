@@ -14,9 +14,11 @@ def init_ragchain():
     path_index = f"{path}/../data/index"
     path_dataset = f"{path}/../data/acl-publication-info.74k.parquet"
     if os.path.exists("/bigwork/nhwpajjy/pre-trained-models"):
-        path_model = "/bigwork/nhwpajjy/pre-trained-models"
-    else:
         path_model = "/bigwork/nhwpajjy/pre-trained-models/TinyLlama-1.1B-Chat-v1.0"
+    elif os.path.exists("/mnt/home/yajjour/pre-trained-models"):
+        path_model ="/mnt/home/yajjour/pre-trained-models/TinyLlama-1.1B-Chat-v1.0"
+    else:
+        path_model = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 
     if not os.path.exists(path_index):
         create_index( path_dataset=path_dataset, path_index=path_index, debug=False)
