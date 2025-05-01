@@ -340,7 +340,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746081018387</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="- changed docker setup to in-dockerfile">
+      <option name="closed" value="true" />
+      <created>1746117776069</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1746117776069</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
