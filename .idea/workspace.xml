@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="0fd8ae4a-86cc-4b65-9a35-d2486765ada2" name="Changes" comment="- changed docker setup to in-dockerfile" />
+=======
+    <list default="true" id="0fd8ae4a-86cc-4b65-9a35-d2486765ada2" name="Changes" comment="- changed docker setup to in-dockerfile">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scirag/.deploy_variables" beforeDir="false" afterPath="$PROJECT_DIR$/scirag/.deploy_variables" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scirag/setup_rag.py" beforeDir="false" afterPath="$PROJECT_DIR$/scirag/setup_rag.py" afterDir="false" />
+    </list>
+>>>>>>> 9a2926b1027c6777dc90e12156bd58162a645d3e
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -356,6 +364,7 @@
       <option name="project" value="LOCAL" />
       <updated>1746118423524</updated>
     </task>
+<<<<<<< HEAD
     <task id="LOCAL-00036" summary="- changed docker setup to in-dockerfile">
       <option name="closed" value="true" />
       <created>1746125855393</created>
@@ -389,6 +398,9 @@
       <updated>1746132679969</updated>
     </task>
     <option name="localTasksCounter" value="40" />
+=======
+    <option name="localTasksCounter" value="36" />
+>>>>>>> 9a2926b1027c6777dc90e12156bd58162a645d3e
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

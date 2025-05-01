@@ -38,6 +38,7 @@ or using curl
 ```
 curl curl http://127.0.0.1:80/chat?q=aaa
 ```
+<<<<<<< HEAD
 
 
 ### AWS
@@ -48,3 +49,5 @@ curl curl http://127.0.0.1:80/chat?q=aaa
 
 ```
 
+=======
+>>>>>>> 9a2926b1027c6777dc90e12156bd58162a645d3e
