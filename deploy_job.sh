@@ -10,5 +10,5 @@
 module load Miniforge3
 conda activate sciassist
 
-python scirag/setup_rag.py --debug --path-index data/index --path-dataset data/acl-publication-info.74k.parquet
+python scirag/setup_rag.py --path-index data/index --path-dataset data/acl-publication-info.74k.parquet
   --path-model /mnt/home/yajjour/pre-trained-models/DeepSeek-R1-Distill-Qwen-1.5B
