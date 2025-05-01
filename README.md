@@ -38,3 +38,12 @@ or using curl
 ```
 curl curl http://127.0.0.1:80/chat?q=aaa
 ```
+
+
+### AWS
+
+To lunch on AWS, 
+1) you can start an EC2 instance g4dn.xlarge.
+2) git clone https://github.com/YamenAjjour/SciAssist.git
+3) docker run -it --rm --gpus all -v "$(pwd)":/sciassit  -p 80:80 -w /sciassit --name "sciassist-cnt" --tty "sciassist-img:16"
+
