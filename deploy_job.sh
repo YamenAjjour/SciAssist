@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH --job-name=fine-tuning-2
+#SBATCH --job-name=setup_rag_indx
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=12
 #SBATCH --mem=20G
