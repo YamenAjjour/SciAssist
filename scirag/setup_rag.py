@@ -45,7 +45,7 @@ def create_index(path_dataset: Path, path_index: Path, debug: bool):
 
     embeddings = HuggingFaceEmbeddings(
         model_name=embedding_model_id,
-        model_kwargs = {'device': 'cuda'}
+        model_kwargs = {'device': 'auto'}
     )
     embeddings_db = FAISS.from_documents(all_chunks, embeddings)
     embeddings_db.save_local(path_index)
@@ -76,7 +76,7 @@ def create_rag_pipeline(path_index: Path, path_model: Path, debug:bool=False):
     llm = create_llm(path_model)
     embeddings_db = load_index(path_index)
     prompt = return_prompt()
-    retriever = embeddings_db.as_retriever(search_kwargs={"k": 10})
+    retriever = embeddings_db.as_retriever(search_kwargs={"k": 4})
     chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs={"prompt":prompt})
     return chain
 
