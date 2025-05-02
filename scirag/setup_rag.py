@@ -45,7 +45,7 @@ def create_index(path_dataset: Path, path_index: Path, debug: bool):
 
     embeddings = HuggingFaceEmbeddings(
         model_name=embedding_model_id,
-        model_kwargs = {'device': 'auto'}
+        model_kwargs = {'device': 'cuda'}
     )
     embeddings_db = FAISS.from_documents(all_chunks, embeddings)
     embeddings_db.save_local(path_index)
