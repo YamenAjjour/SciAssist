@@ -46,3 +46,7 @@ curl curl http://127.0.0.1:80/chat?q=aaa
 3) docker run -it --rm --gpus all -v "$(pwd)":/sciassit  -p 80:80 -w /sciassit --name "sciassist-cnt" --tty "sciassist-img:16"
 
 ```
+
+### Feature 
+
+### Feature 
