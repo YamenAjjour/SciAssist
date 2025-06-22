@@ -92,15 +92,14 @@ def create_index(path_dataset: Path, path_index: Path, debug: bool):
         if len(current_batch) >= batch_size:
             batch_embeddings = embeddings.embed_documents(current_batch)
             embeddings_and_doc = zip(current_batch, batch_embeddings)
+            print(embeddings_and_doc)
             vectorstore.add_embeddings(embeddings_and_doc)
         current_batch = []
     vectorstore.save_local(str(path_index))
 
 def load_index(path_index: Path):
     print(f"loading index from {path_index}")
-    embeddings = HuggingFaceEmbeddings(
-        model_name=embedding_model_id,
-    )
+    embeddings = HuggingFaceEmbeddings(model_name=embedding_model_id,)
     embeddings_db = FAISS.load_local(path_index, embeddings, allow_dangerous_deserialization=True)
     num_documents = len(embeddings_db.index_to_docstore_id)
     print(f"Total number of documents: {num_documents}")
