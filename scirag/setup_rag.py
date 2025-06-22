@@ -26,7 +26,7 @@ def create_llm(path_model: Path):
                top_k=100,
                top_p=0.95,
                temperature=0.8,
-               dtype="float16",
+               dtype="float32",
 
                # tensor_parallel_size=... # for distributed inference
                )
@@ -88,7 +88,7 @@ def create_index(path_dataset: Path, path_index: Path, debug: bool):
     print("indexing")
     for doc in document_generator:
 
-        current_batch.append(doc)
+        current_batch.append(doc.page_content)
         if len(current_batch) >= batch_size:
             batch_embeddings = embeddings.embed_documents(current_batch)
             embeddings_and_doc = zip(current_batch, batch_embeddings)
@@ -102,6 +102,8 @@ def load_index(path_index: Path):
         model_name=embedding_model_id,
     )
     embeddings_db = FAISS.load_local(path_index, embeddings, allow_dangerous_deserialization=True)
+    num_documents = len(embeddings_db.index_to_docstore_id)
+    print(f"Total number of documents: {num_documents}")
     return embeddings_db
 
 def return_prompt():
@@ -152,6 +154,7 @@ if __name__ == "__main__":
         if query == "exit":
             break
         else:
+            print(answer)
             answer = chain.run({"query": query})
             answer = answer.split("<｜Assistant｜>")[1]
             print(answer)
