@@ -3,7 +3,7 @@ import os.path
 import numpy as np
 import pandas as pd
 import faiss
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 
 from pathlib import Path
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -13,7 +13,7 @@ from langchain_community.docstore.in_memory import InMemoryDocstore
 from langchain_core.documents import Document
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
-from langchain.llms import VLLM
+from langchain_community.llms import VLLM
 from tqdm import tqdm
 from argparse import *
 embedding_model_id = "BAAI/bge-small-en-v1.5"
