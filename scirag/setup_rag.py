@@ -1,12 +1,16 @@
 import os.path
 
+import numpy as np
 import pandas as pd
-
+import faiss
 from langchain.vectorstores import FAISS
 
 from pathlib import Path
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+from langchain_community.docstore.in_memory import InMemoryDocstore
+from langchain_core.documents import Document
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain.llms import VLLM
@@ -31,24 +35,66 @@ def create_llm(path_model: Path):
 
 def create_index(path_dataset: Path, path_index: Path, debug: bool):
     print("creating index")
-    df = pd.read_parquet(path_dataset)
-    if debug:
-        df = df.sample(100)
-    df = df.sample(40000)
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1028, chunk_overlap=0)
-    all_chunks = []
-    for _, paper in tqdm(df.iterrows()):
-        chunks = splitter.split_text(paper["full_text"])
-        all_chunks += splitter.create_documents(chunks)
+    def generate_documents_stream():
+        df = pd.read_parquet(path_dataset)
+        if debug:
+            df = df.sample(100)
+        splitter = RecursiveCharacterTextSplitter(chunk_size=1028, chunk_overlap=0)
 
-
+        for i, paper in tqdm(df.iterrows()):
+            chunks = splitter.split_text(paper["full_text"])
+            for chunk in chunks:
+                yield Document(page_content=chunk, metadata={"source" : f"doc_{i}"})
+    document_generator = generate_documents_stream()
+    training_docs = []
+    training_dataset_size = 10000
+    m = 8
+    batch_size= 200
+    bits = 8
+    for _ in range(training_dataset_size):
+        try:
+            doc = next(document_generator)
+            training_docs.append(doc.page_content)
+        except StopIteration:
+            break
 
     embeddings = HuggingFaceEmbeddings(
         model_name=embedding_model_id,
         model_kwargs = {'device': 'cuda'}
     )
-    embeddings_db = FAISS.from_documents(all_chunks, embeddings)
-    embeddings_db.save_local(path_index)
+    print("embedding for training")
+    training_vectors = embeddings.embed_documents(training_docs)
+    #embeddings_db = FAISS.from_documents(all_chunks, embeddings)
+    training_vectors_np = np.array(training_vectors, dtype="float32")
+    embedding_dimension = training_vectors_np.shape[1]
+    assert embedding_dimension % m == 0
+    quantizer = faiss.IndexFlatL2(embedding_dimension)
+
+    # Create the IndexIVFPQ
+    faiss.IndexPQ()
+
+    faiss_index = faiss.IndexPQ(embedding_dimension, m, bits)
+    print("training")
+    faiss_index.train(training_vectors_np)
+    vectorstore = FAISS(
+        embedding_function=embeddings, # Still needed for query embedding
+        index=faiss_index,
+        docstore=InMemoryDocstore(),
+        index_to_docstore_id={}
+    )
+    document_generator = generate_documents_stream()
+    current_batch = []
+
+    print("indexing")
+    for doc in document_generator:
+
+        current_batch.append(doc)
+        if len(current_batch) >= batch_size:
+            batch_embeddings = embeddings.embed_documents(current_batch)
+            embeddings_and_doc = zip(current_batch, batch_embeddings)
+            vectorstore.add_embeddings(embeddings_and_doc)
+        current_batch = []
+    vectorstore.save_local(str(path_index))
 
 def load_index(path_index: Path):
     print(f"loading index from {path_index}")
