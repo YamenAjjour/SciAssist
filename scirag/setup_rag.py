@@ -39,7 +39,7 @@ def create_index(path_dataset: Path, path_index: Path, debug: bool):
         df = pd.read_parquet(path_dataset)
         if debug:
             df = df.sample(100)
-        splitter = RecursiveCharacterTextSplitter(chunk_size=1028, chunk_overlap=0)
+        splitter = RecursiveCharacterTextSplitter(chunk_size=256, chunk_overlap=0)
 
         for i, paper in tqdm(df.iterrows()):
             chunks = splitter.split_text(paper["full_text"])
