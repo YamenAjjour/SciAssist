@@ -147,18 +147,21 @@ if __name__ == "__main__":
         create_index(path_dataset=path_dataset, path_index=path_index, debug=debug)
 
     chain = create_rag_pipeline(path_index, path_model, debug)
-
-    while True:
-        query = input("Enter query or exit to exit:")
-        if query == "exit":
-            break
-        else:
-            if args.query:
-                query = args.query
-            print(answer)
-            answer = chain.run({"query": query})
-            answer = answer.split("<｜Assistant｜>")[1]
-            print(answer)
+    if args.query:
+        query = args.query
+        answer = chain.run({"query": query})
+        answer = answer.split("<｜Assistant｜>")[1]
+        print(answer)
+    else:
+        while True:
+            query = input("Enter query or exit to exit:")
+            if query == "exit":
+                break
+            else:
+                print(answer)
+                answer = chain.run({"query": query})
+                answer = answer.split("<｜Assistant｜>")[1]
+                print(answer)
 
 
 
