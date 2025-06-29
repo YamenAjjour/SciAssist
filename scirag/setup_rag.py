@@ -49,7 +49,7 @@ def create_index(path_dataset: Path, path_index: Path, debug: bool):
     training_docs = []
     training_dataset_size = 10000
     m = 8
-    batch_size= 10
+    batch_size= 1000
     bits = 8
     for _ in range(training_dataset_size):
         try:
