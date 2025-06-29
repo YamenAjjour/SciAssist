@@ -150,6 +150,7 @@ if __name__ == "__main__":
     if args.query:
         query = args.query
         answer = chain.run({"query": query})
+        print(answer)
         answer = answer.split("<｜Assistant｜>")[1]
         print(answer)
     else:
