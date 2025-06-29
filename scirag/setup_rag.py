@@ -133,7 +133,7 @@ def create_args():
     parser.add_argument("--path-model", type=str, required=True)
     parser.add_argument("--path-dataset", type=str)
     parser.add_argument("--path-index", type=str, required=True)
-
+    parser.add_argument("--query", type=str)
     return parser.parse_args()
 
 if __name__ == "__main__":
@@ -153,6 +153,8 @@ if __name__ == "__main__":
         if query == "exit":
             break
         else:
+            if args.query:
+                query = args.query
             print(answer)
             answer = chain.run({"query": query})
             answer = answer.split("<｜Assistant｜>")[1]
