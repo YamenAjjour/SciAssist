@@ -49,7 +49,7 @@ def create_index(path_dataset: Path, path_index: Path, debug: bool):
     training_docs = []
     training_dataset_size = 10000
     m = 8
-    batch_size= 200
+    batch_size= 10
     bits = 8
     for _ in range(training_dataset_size):
         try:
@@ -94,7 +94,7 @@ def create_index(path_dataset: Path, path_index: Path, debug: bool):
             embeddings_and_doc = zip(current_batch, batch_embeddings)
             print(embeddings_and_doc)
             vectorstore.add_embeddings(embeddings_and_doc)
-        current_batch = []
+            current_batch = []
     vectorstore.save_local(str(path_index))
 
 def load_index(path_index: Path):
