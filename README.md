@@ -47,6 +47,20 @@ curl curl http://127.0.0.1:80/chat?q=aaa
 
 ```
 
-### Feature 
+### Web Client
 
-### Feature 
+The chat ui client is implemented using streamlit and is deployed as a single docker container
+
+to build run the following
+
+
+```
+docker build -t sciassist-client -f chatui/docker/Dockerfile .
+```
+
+To run the client use
+```
+docker run  -p 8081:8051 sciassist-client
+```
+
+Then you should be able to access the web client using 127.0.0.1:8081
