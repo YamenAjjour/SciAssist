@@ -47,7 +47,7 @@ curl curl http://127.0.0.1:80/chat?q=aaa
 
 ```
 
-### Web Client
+### Chat UI Client
 
 The chat ui client is implemented using streamlit and is deployed as a single docker container
 
