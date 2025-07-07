@@ -18,10 +18,10 @@ python scirag/setup_rag.py --debug --path-index data/index --path-dataset data/a
 
 adding debug will create an index of only 100 papers for debugging purposes
 
-### Locally as a web service
+### Locally as a web service on cpu
 
 ```
-fastapi run scirag/setup_api.py --port 80
+./run_server.sh
 ```
 
 ### Locally as a webservice using docker
@@ -52,6 +52,12 @@ The chat ui client is implemented using streamlit and is deployed as a single do
 
 to build run the following
 
+### Locally as a web service
+
+```
+./run_client.sh
+```
+
 
 ```
 docker build -t sciassist-client -f chatui/docker/Dockerfile .
@@ -62,4 +68,4 @@ To run the client use
 docker run  -p 8081:8051 sciassist-client
 ```
 
-Then you should be able to access the web client using 127.0.0.1:8081
+Then you should be able to access the web client using 127.0.0.1:8501

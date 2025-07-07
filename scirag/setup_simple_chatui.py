@@ -2,15 +2,17 @@ import os
 import streamlit as st
 from setup_rag import *
 import requests
+import json
 
 
 
 
-url = "http://{webserver_ip}:80/chat?q= What are typical software designs of RAG"
 
 
 
-response = requests.post(url, data=data)
+
+
+
 def init_ragchain():
     global chain
     path = os.path.dirname(os.path.realpath(__file__))
@@ -27,10 +29,24 @@ def init_ragchain():
     if not os.path.exists(path_index):
         create_index( path_dataset=path_dataset, path_index=path_index, debug=False)
 
-with open("../config.yaml" , "r") as f:
 
-
-
+def answer_query(query: str) -> str:
+    url = "http://127.0.0.1:8585/chat" # No need for '?' at the end, requests handles it
+    try:
+        response = requests.get(url, params={"q": query})
+        response.raise_for_status()  # Raises HTTPError for bad responses (4xx or 5xx)
+        data = response.json()       # Parses JSON directly
+        return data.get("answer")    # Use .get() for safer dictionary access
+    except requests.exceptions.RequestException as e:
+        print(f"Error making request: {e}")
+        return None # Or raise a custom exception, or handle as appropriate
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON response: {e}")
+        print(f"Response text: {response.text}") # Good for debugging
+        return None
+    except KeyError:
+        print(f"Response did not contain 'answer' key: {data}")
+        return None
 
 st.title("SciAssist")
 
@@ -48,6 +64,6 @@ if prompt := st.chat_input("What is up?"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        answer =
+        answer = answer_query(prompt)
         response = st.write_stream(answer)
     st.session_state.messages.append({"role" : "assistant", "content": response})
