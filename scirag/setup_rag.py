@@ -22,7 +22,7 @@ def create_llm(path_model: Path):
     print("loading vllm")
     llm = VLLM(model=path_model,
                trust_remote_code=True,  # mandatory for hf models
-               max_new_tokens=10,
+               max_new_tokens=300,
                top_k=100,
                top_p=0.95,
                temperature=0.8,
@@ -123,7 +123,7 @@ def create_rag_pipeline(path_index: Path, path_model: Path, debug:bool=False):
     llm = create_llm(path_model)
     embeddings_db = load_index(path_index)
     prompt = return_prompt()
-    retriever = embeddings_db.as_retriever(search_kwargs={"k": 10})
+    retriever = embeddings_db.as_retriever(search_kwargs={"k": 3})
     chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs={"prompt":prompt})
     return chain
 
@@ -159,7 +159,7 @@ if __name__ == "__main__":
             if query == "exit":
                 break
             else:
-                print(answer)
+                #print(answer)
                 answer = chain.run({"query": query})
                 answer = answer.split("<｜Assistant｜>")[1]
                 print(answer)

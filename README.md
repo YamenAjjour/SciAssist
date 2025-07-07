@@ -42,7 +42,7 @@ curl curl http://127.0.0.1:80/chat?q=aaa
 ### AWS
 ```
 1) you can start an EC2 instance g4dn.xlarge.
-2) docker run -it --rm --gpus all -v "$(pwd)":/sciassit  -p 80:80 -w /sciassit --name "sciassist-cnt" --tty "yamenajjour:/sciassist-img:17"
+2) docker run -it --rm --gpus all -p 80:80 --name "sciassist-cnt" --tty "yamenajjour:/sciassist-img:17"
 
 ```
 
