@@ -22,7 +22,7 @@ def create_llm(path_model: Path):
     print("loading vllm")
     llm = VLLM(model=path_model,
                trust_remote_code=True,  # mandatory for hf models
-               max_new_tokens=300,
+               max_new_tokens=50,
                top_k=100,
                top_p=0.95,
                temperature=0.8,

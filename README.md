@@ -42,9 +42,7 @@ curl curl http://127.0.0.1:80/chat?q=aaa
 ### AWS
 ```
 1) you can start an EC2 instance g4dn.xlarge.
-2) git clone https://github.com/YamenAjjour/SciAssist.git
-3) scp -i ~/Dropbox/mylaptop.pem -r /home/yamen/projects/sciassist/data/index/ ec2-user@3.88.160.2:/home/ec2-user/SciAssist/data
-4) docker run -it --rm --gpus all -v "$(pwd)":/sciassit  -p 80:80 -w /sciassit --name "sciassist-cnt" --tty "sciassist-img:16"
+2) docker run -it --rm --gpus all -v "$(pwd)":/sciassit  -p 80:80 -w /sciassit --name "sciassist-cnt" --tty "yamenajjour:/sciassist-img:17"
 
 ```
 
