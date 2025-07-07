@@ -1,2 +1,2 @@
-IMAGE=yamenajjour/sciassist-img:16
+IMAGE=yamenajjour/sciassist-img:17
 CONTAINER=sciassist

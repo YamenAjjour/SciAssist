@@ -1,7 +1,16 @@
 import os
 import streamlit as st
 from setup_rag import *
+import requests
 
+
+
+
+url = "http://{webserver_ip}:80/chat?q= What are typical software designs of RAG"
+
+
+
+response = requests.post(url, data=data)
 def init_ragchain():
     global chain
     path = os.path.dirname(os.path.realpath(__file__))
@@ -18,10 +27,9 @@ def init_ragchain():
     if not os.path.exists(path_index):
         create_index( path_dataset=path_dataset, path_index=path_index, debug=False)
 
-    chain = create_rag_pipeline(path_index, path_model, True)
+with open("../config.yaml" , "r") as f:
 
-chain = None
-init_ragchain()
+
 
 
 st.title("SciAssist")
@@ -40,6 +48,6 @@ if prompt := st.chat_input("What is up?"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        answer = chain.run({"query": prompt})
+        answer =
         response = st.write_stream(answer)
     st.session_state.messages.append({"role" : "assistant", "content": response})
