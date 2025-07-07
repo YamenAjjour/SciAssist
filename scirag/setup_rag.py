@@ -120,7 +120,7 @@ def return_prompt():
 
 def create_rag_pipeline(path_index: Path, path_model: Path, debug:bool=False):
     print("creating rag pipeline")
-    llm = create_llm(path_model)
+    #llm = create_llm(path_model)
     embeddings_db = load_index(path_index)
     prompt = return_prompt()
     retriever = embeddings_db.as_retriever(search_kwargs={"k": 10})
