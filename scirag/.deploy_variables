@@ -1,2 +1,3 @@
 IMAGE=yamenajjour/sciassist-img:17
+IMAGE_CPU=yamenajjour/sciassist-cpu-img
 CONTAINER=sciassist

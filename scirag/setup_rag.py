@@ -105,14 +105,8 @@ def load_index(path_index: Path):
     print(f"Total number of documents: {num_documents}")
     return embeddings_db
 
-def return_prompt():
-    prompt_template = """<|system|>As a helpful scientific assistants, please answer the question below, focusing on numerical data and using only the context below.
-    Don't invent facts. If you can't provide a factual answer, say you don't know what the answer is.
-    <|user|>
-    question: {question}
-    context: {context}
-    <assistant>:
-    """
+
+
 
 
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
