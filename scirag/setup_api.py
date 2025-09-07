@@ -34,7 +34,17 @@ app = FastAPI()
 def read_item(q: Union[str, None] = None):
     if not chain:
         return {"answer": "call /"}
-    answer = chain.run({"query": q})
-    print(answer)
-    #answer = answer.split("<assistant>:")[1]
-    return {"answer": answer}
+
+    result = chain.run({"query": q})
+
+    print(f"Final Answer: {result['result']}")
+
+    print("\n--- Retrieved Source Documents ---")
+    for i, doc in enumerate(result['source_documents']):
+        print(f"\nDocument {i+1}:")
+        print(f"Content: {doc.page_content}")
+        print(f"Metadata: {doc.metadata}")
+
+
+
+    return {"answer": result['result']}

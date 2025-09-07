@@ -127,7 +127,7 @@ def create_rag_pipeline(path_index: Path, path_model: Path, debug:bool=False):
     embeddings_db = load_index(path_index)
     prompt = return_prompt()
     retriever = embeddings_db.as_retriever(search_kwargs={"k": 3})
-    chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs={"prompt":prompt})
+    chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs={"prompt":prompt}, return_source_documents=True)
     return chain
 
 def create_args():
