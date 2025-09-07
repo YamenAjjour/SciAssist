@@ -14,7 +14,7 @@ run_docker()
 {
   echo "runing docker "
   echo "$FAST_API_PORT"
-  docker run -it --rm all -v "$(pwd)":/sciassit  -p 80:80 -w /sciassit --name "$CONTAINER" --tty "$IMAGE"
+  docker run -it --rm -v "$(pwd)":/sciassit  -p 80:80 -w /sciassit --name "$CONTAINER" --tty "$IMAGE"
 
 }
 
@@ -32,25 +32,35 @@ push_docker()
   docker push "$IMAGE"
 }
 
+echo "hello"
 
 
+while getopts "brp" opt; do
+echo "while"
 
-while getops "brpc" opt;
-
-case opt;
-c)
-
-;;
+echo $opt
+case $opt in
 
 b)
+  echo "building"
 build_docker
 ;;
 p)
+  echo "pushing"
 push_docker
 ;;
 r)
+  echo "running"
 run_docker
+run_service
 ;;
+
+:)
+      echo "left"
+      # This case handles an argument that is present but has no value
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
 esac
 
 done

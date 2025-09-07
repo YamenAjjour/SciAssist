@@ -4,8 +4,10 @@ import numpy as np
 import pandas as pd
 import faiss
 from langchain_community.vectorstores import FAISS
-
+from dotenv import load_dotenv
 from pathlib import Path
+
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
@@ -16,9 +18,17 @@ from langchain.chains import RetrievalQA
 from langchain_community.llms import VLLM
 from tqdm import tqdm
 from argparse import *
+load_dotenv()
+
+
+
 embedding_model_id = "BAAI/bge-small-en-v1.5"
 
-def create_llm(path_model: Path):
+def create_gemini_llm():
+    llm = ChatGoogleGenerativeAI(model="models/gemini-2.0-flash-lite")
+    return llm
+
+def create_vllm(path_model: Path):
     print("loading vllm")
     llm = VLLM(model=path_model,
                trust_remote_code=True,  # mandatory for hf models
@@ -106,15 +116,14 @@ def load_index(path_index: Path):
     return embeddings_db
 
 
-
-
+def return_prompt():
 
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     return prompt
 
 def create_rag_pipeline(path_index: Path, path_model: Path, debug:bool=False):
     print("creating rag pipeline")
-    llm = create_llm(path_model)
+    llm = create_gemini_llm()
     embeddings_db = load_index(path_index)
     prompt = return_prompt()
     retriever = embeddings_db.as_retriever(search_kwargs={"k": 3})

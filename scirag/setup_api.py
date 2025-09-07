@@ -3,7 +3,7 @@ from typing import Union
 from setup_rag import *
 from fastapi import FastAPI
 
-
+print(f"Hello")
 
 
 
@@ -19,7 +19,7 @@ def init_ragchain():
         path_model ="/mnt/home/yajjour/pre-trained-models/TinyLlama-1.1B-Chat-v1.0"
     else:
         path_model = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
-
+    print(f"loading {path_model} and {path_index}")
     if not os.path.exists(path_index):
         create_index( path_dataset=path_dataset, path_index=path_index, debug=False)
 
