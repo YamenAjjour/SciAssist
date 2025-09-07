@@ -118,7 +118,7 @@ def load_index(path_index: Path):
 
 def return_prompt():
 
-    prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
+    prompt = PromptTemplate(template="{context} {question}", input_variables=["context", "question"])
     return prompt
 
 def create_rag_pipeline(path_index: Path, path_model: Path, debug:bool=False):
