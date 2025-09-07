@@ -153,9 +153,7 @@ if __name__ == "__main__":
     if args.query:
         query = args.query
         answer = chain.run({"query": query})
-        print(answer)
-        answer = answer.split("<｜Assistant｜>")[1]
-        print(answer)
+
     else:
         while True:
             query = input("Enter query or exit to exit:")
@@ -164,6 +162,12 @@ if __name__ == "__main__":
             else:
                 #print(answer)
                 answer = chain.run({"query": query})
+                retrieved_docs = chain.get_relevant_documents({"query": query})
+                print(f"Retrieved {len(retrieved_docs)} documents:")
+                for i, doc in enumerate(retrieved_docs):
+                    print(f"\n--- Document {i+1} ---")
+                    print(f"Content: {doc.page_content}")
+                    print(f"Metadata: {doc.metadata}")
                 answer = answer.split("<｜Assistant｜>")[1]
                 print(answer)
 
