@@ -32,10 +32,8 @@ app = FastAPI()
 
 @app.get("/chat")
 def read_item(q: Union[str, None] = None):
-    if not chain:
-        return {"answer": "call /"}
 
-    result = chain.run({"query": q})
+    result = chain({"query": q})
 
     print(f"Final Answer: {result['result']}")
 
