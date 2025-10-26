@@ -20,10 +20,13 @@ from tqdm import tqdm
 from argparse import *
 load_dotenv()
 from parse_pdf import *
+from scirag.config import *
 
-
+config = get_config()
 #embedding_model_id = "gsarti/scibert-nli"
-embedding_model_id = "sentence-transformers/allenai-specter"
+embedding_model_id = config["embedding_model_id"]
+k = config["k"]
+chunk_size = config["chunk_size"]
 
 def create_gemini_llm():
     llm = ChatGoogleGenerativeAI(model="models/gemini-2.0-flash-lite", max_output_tokens=1024)
@@ -44,15 +47,15 @@ def create_vllm(path_model: Path):
 
     return llm
 
-def create_index(path_dataset: Path, path_index: Path, debug: bool):
+def create_index(path_dataset: Path, path_index: Path, own_domain: bool):
     print("creating index")
     def generate_documents_stream():
 
-        if debug:
+        if own_domain:
             df = preprocess_and_clean_files(path_dataset)
         else:
             df = pd.read_parquet(path_dataset)
-        splitter = RecursiveCharacterTextSplitter(chunk_size=1024, chunk_overlap=0)
+        splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=0)
 
         for i, paper in tqdm(df.iterrows()):
             chunks = splitter.split_text(paper["full_text"])
@@ -133,13 +136,13 @@ def create_rag_pipeline(path_index: Path, path_model: Path = None):
 
     embeddings_db = load_index(path_index)
     prompt = return_prompt()
-    retriever = embeddings_db.as_retriever(search_kwargs={"k": 20})
+    retriever = embeddings_db.as_retriever(search_kwargs={"k": k})
     chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs={"prompt":prompt}, return_source_documents=True)
     return chain
 
 def create_args():
     parser = ArgumentParser()
-    parser.add_argument("--debug", action="store_true")
+    parser.add_argument("--own-domain", action="store_true")
     parser.add_argument("--path-model", type=str, required=True)
     parser.add_argument("--path-dataset", type=str)
     parser.add_argument("--path-index", type=str, required=True)
@@ -149,13 +152,13 @@ def create_args():
 if __name__ == "__main__":
     args = create_args()
 
-    debug = args.debug
+    own_domain = args.own_domain
     path_model = args.path_model
     path_index = args.path_index
     path_dataset = args.path_dataset
 
     if not os.path.exists(path_index):
-        create_index(path_dataset=path_dataset, path_index=path_index, debug=debug)
+        create_index(path_dataset=path_dataset, path_index=path_index, own_domain=own_domain)
 
     chain = create_rag_pipeline(path_index, path_model)
     if args.query:

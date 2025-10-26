@@ -10,9 +10,9 @@ import argparse
 def init_ragchain(debug=False):
     global chain
     config = get_config()
-    if config["debug"]:
-        path_index = config["path_index_debug"]
-        path_dataset = config["path_dataset_debug"]
+    if config["own_domain"]:
+        path_index = config["path_index_own_domain"]
+        path_dataset = config["path_dataset_own_domain"]
     else:
         path_index = config["path_index"]
         path_dataset = config["path_dataset"]
@@ -22,7 +22,7 @@ def init_ragchain(debug=False):
 
     print(f"loading  {path_index}")
     if not os.path.exists(path_index):
-        create_index( path_dataset=path_dataset, path_index=path_index, debug=config["debug"])
+        create_index( path_dataset=path_dataset, path_index=path_index, own_domain=config["own_domain"])
 
     chain = create_rag_pipeline(path_index)
 chain = None

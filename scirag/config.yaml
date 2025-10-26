@@ -3,7 +3,11 @@
   path_dataset : "data/acl-publication-info.74k.parquet",
   path_model : "/bigwork/nhwpajjy/pre-trained-models/DeepSeek-R1-Distill-Qwen-1.5B",
   webserver_ip: "34.204.191.141",
-  path_index_debug : "data/index-debug",
-  path_dataset_debug : "data/argument-mining",
-  "debug": True
+  path_index_own_domain : "data/index-own",
+  path_dataset_own_domain : "data/argument-mining",
+  "own_domain": True,
+  "chunk_size": 2048,
+  "embedding_model_id": "sentence-transformers/allenai-specter",
+  "k": 20,
+  "temperature": 0.6
 }
