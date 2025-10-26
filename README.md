@@ -4,6 +4,7 @@ This is a research assistant for NLP Researchers that is implemented using Retri
 DeepSeek-R1-Distill-Qwen-1.5B as a backbone to answer questions on scientific NLP Papers. The paper pool that the underlines 
 the rag system contains 72k papers from the [ACL Anthology](https://github.com/shauryr/ACL-anthology-corpus?tab=readme-ov-file).
 
+![img_1.png](img_1.png)
 # Deployment
 
 
@@ -26,7 +27,7 @@ adding debug will create an index of only 100 papers for debugging purposes
 
 ### Locally as a webservice using docker
 ```
-./sciarg/deploy_sciarg.sh
+./scirag/deploy_sciarg_cpu.sh
 ```
 
 The web service can be then accessed as follows 

@@ -19,13 +19,14 @@ from langchain_community.llms import VLLM
 from tqdm import tqdm
 from argparse import *
 load_dotenv()
+from parse_pdf import *
 
 
-
-embedding_model_id = "BAAI/bge-small-en-v1.5"
+#embedding_model_id = "gsarti/scibert-nli"
+embedding_model_id = "sentence-transformers/allenai-specter"
 
 def create_gemini_llm():
-    llm = ChatGoogleGenerativeAI(model="models/gemini-2.0-flash-lite")
+    llm = ChatGoogleGenerativeAI(model="models/gemini-2.0-flash-lite", max_output_tokens=1024)
     return llm
 
 def create_vllm(path_model: Path):
@@ -46,10 +47,12 @@ def create_vllm(path_model: Path):
 def create_index(path_dataset: Path, path_index: Path, debug: bool):
     print("creating index")
     def generate_documents_stream():
-        df = pd.read_parquet(path_dataset)
+
         if debug:
-            df = df.sample(100)
-        splitter = RecursiveCharacterTextSplitter(chunk_size=256, chunk_overlap=0)
+            df = preprocess_and_clean_files(path_dataset)
+        else:
+            df = pd.read_parquet(path_dataset)
+        splitter = RecursiveCharacterTextSplitter(chunk_size=1024, chunk_overlap=0)
 
         for i, paper in tqdm(df.iterrows()):
             chunks = splitter.split_text(paper["full_text"])
@@ -121,12 +124,16 @@ def return_prompt():
     prompt = PromptTemplate(template="Answer the following question based on the context. Context:{context} Question{question}", input_variables=["context", "question"])
     return prompt
 
-def create_rag_pipeline(path_index: Path, path_model: Path, debug:bool=False):
+def create_rag_pipeline(path_index: Path, path_model: Path = None):
     print("creating rag pipeline")
-    llm = create_gemini_llm()
+    if path_model:
+        llm = create_vllm(path_model)
+    else:
+        llm = create_gemini_llm()
+
     embeddings_db = load_index(path_index)
     prompt = return_prompt()
-    retriever = embeddings_db.as_retriever(search_kwargs={"k": 3})
+    retriever = embeddings_db.as_retriever(search_kwargs={"k": 20})
     chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs={"prompt":prompt}, return_source_documents=True)
     return chain
 
@@ -141,6 +148,7 @@ def create_args():
 
 if __name__ == "__main__":
     args = create_args()
+
     debug = args.debug
     path_model = args.path_model
     path_index = args.path_index
@@ -149,7 +157,7 @@ if __name__ == "__main__":
     if not os.path.exists(path_index):
         create_index(path_dataset=path_dataset, path_index=path_index, debug=debug)
 
-    chain = create_rag_pipeline(path_index, path_model, debug)
+    chain = create_rag_pipeline(path_index, path_model)
     if args.query:
         query = args.query
         answer = chain.run({"query": query})

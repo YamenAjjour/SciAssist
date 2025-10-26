@@ -2,29 +2,29 @@ import os.path
 from typing import Union
 from setup_rag import *
 from fastapi import FastAPI
+from config import *
+import argparse
 
-print(f"Hello")
 
 
-
-def init_ragchain():
+def init_ragchain(debug=False):
     global chain
-    path = os.path.dirname(os.path.realpath(__file__))
-
-    path_index = f"{path}/../data/index"
-    path_dataset = f"{path}/../data/acl-publication-info.74k.parquet"
-    if os.path.exists("/bigwork/nhwpajjy/pre-trained-models"):
-        path_model = "/bigwork/nhwpajjy/pre-trained-models/TinyLlama-1.1B-Chat-v1.0"
-    elif os.path.exists("/mnt/home/yajjour/pre-trained-models"):
-        path_model ="/mnt/home/yajjour/pre-trained-models/TinyLlama-1.1B-Chat-v1.0"
+    config = get_config()
+    if config["debug"]:
+        path_index = config["path_index_debug"]
+        path_dataset = config["path_dataset_debug"]
     else:
-        path_model = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
-    print(f"loading {path_model} and {path_index}")
+        path_index = config["path_index"]
+        path_dataset = config["path_dataset"]
+
+
+
+
+    print(f"loading  {path_index}")
     if not os.path.exists(path_index):
-        create_index( path_dataset=path_dataset, path_index=path_index, debug=False)
+        create_index( path_dataset=path_dataset, path_index=path_index, debug=config["debug"])
 
-    chain = create_rag_pipeline(path_index, path_model, True)
-
+    chain = create_rag_pipeline(path_index)
 chain = None
 init_ragchain()
 
@@ -46,3 +46,6 @@ def read_item(q: Union[str, None] = None):
 
 
     return {"answer": result['result']}
+
+
+
