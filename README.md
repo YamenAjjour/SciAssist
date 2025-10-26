@@ -27,6 +27,16 @@ asnwer: "The answer
 }
 ```
 
+**Locally using CLI**
+To deploy the Retrieval Augmented Generation pipeline via clli which allows you to chat with the interface via command line you
+can run the following
+
+```
+python scirag/setup_rag.py --path-index data/index --path-dataset data/acl-publication-info.74k.parquet
+  --path-model /bigwork/nhwpajjy/pre-trained-models/DeepSeek-R1-Distill-Qwen-1.5B
+```
+
+
 ### Streamlit Question Answering Client 
 
 The chat ui client is implemented using streamlit and is deployed as a single docker container
@@ -40,14 +50,6 @@ to build run the following
 ```
 Then you should be able to access the web client using 127.0.0.1:8501
 
-### Locally using CLI
-To deploy the Retrieval Augmented Generation pipeline via clli which allows you to chat with the interface via command line you
-can run the following
-
-```
-python scirag/setup_rag.py --path-index data/index --path-dataset data/acl-publication-info.74k.parquet
-  --path-model /bigwork/nhwpajjy/pre-trained-models/DeepSeek-R1-Distill-Qwen-1.5B
-```
 
 
 
