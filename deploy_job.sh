@@ -1,12 +1,12 @@
 #!/bin/bash -l
-#SBATCH --job-name=setup_rag_indx
+#SBATCH --job-name=paired-task-learning
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=12
 #SBATCH --mem=20G
 #SBATCH --time=24:00:00
 #SBATCH --output setup_rag.out
 #SBATCH --error setup_rag.err
-#SBATCH --gpus=2
+
 module load Miniforge3
 conda activate sciassist
 

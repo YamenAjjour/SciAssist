@@ -20,7 +20,7 @@ from tqdm import tqdm
 from argparse import *
 load_dotenv()
 from parse_pdf import *
-from scirag.config import *
+from config import *
 
 config = get_config()
 #embedding_model_id = "gsarti/scibert-nli"
