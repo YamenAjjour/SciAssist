@@ -6,7 +6,7 @@
 #SBATCH --time=24:00:00
 #SBATCH --output setup_rag.out
 #SBATCH --error setup_rag.err
-
+#SBATCH --gpus=1
 module load Miniforge3
 conda activate sciassist
 
