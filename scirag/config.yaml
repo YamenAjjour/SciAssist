@@ -5,6 +5,7 @@
   webserver_ip: "34.204.191.141",
   path_index_own_domain : "data/index-own",
   path_dataset_own_domain : "data/argument-mining",
+  path_dataset_cache : "data/cache/",
   "own_domain": False,
   "chunk_size": 1024,
   "embedding_model_id": "sentence-transformers/allenai-specter",

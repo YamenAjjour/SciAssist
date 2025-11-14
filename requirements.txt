@@ -1,0 +1,12 @@
+langchain
+langchain-community
+faiss-gpu-cu12
+fastapi[standard]
+pandas
+tqdm
+sentence-transformers
+vllm
+fastparquet
+langchain_huggingface
+langchain-google-genai
+python-dotenv
