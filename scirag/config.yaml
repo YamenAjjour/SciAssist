@@ -6,6 +6,7 @@
   path_index_own_domain : "data/index-own",
   path_dataset_own_domain : "data/argument-mining",
   path_dataset_cache : "data/cache/",
+  path_artifacts: "data/artifacts",
   "own_domain": False,
   "chunk_size": 1024,
   "embedding_model_id": "sentence-transformers/allenai-specter",

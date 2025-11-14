@@ -3,24 +3,25 @@ import os.path
 import numpy as np
 import pandas as pd
 import faiss
+from langchain_classic.chains.retrieval_qa.base import RetrievalQA
 from langchain_community.vectorstores import FAISS
 from dotenv import load_dotenv
 from pathlib import Path
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from langchain_community.docstore.in_memory import InMemoryDocstore
 from langchain_core.documents import Document
-from langchain.prompts import PromptTemplate
-from langchain.chains import RetrievalQA
+from langchain_core.prompts import PromptTemplate
 from langchain_community.llms import VLLM
 from tqdm import tqdm
 from argparse import *
 load_dotenv()
 from parse_pdf import *
 from config import *
+
 
 config = get_config()
 #embedding_model_id = "gsarti/scibert-nli"
@@ -47,20 +48,18 @@ def create_vllm(path_model: Path):
 
     return llm
 
-def create_index(path_dataset: Path, path_index: Path, own_domain: bool):
+def create_index(path_dataset: Path, path_index: Path, own_domain: bool, path_artifacts: Path):
     print("creating index")
     def generate_documents_stream():
 
-        if own_domain:
-            df = preprocess_and_clean_files(path_dataset)
-        else:
-            df = pd.read_parquet(path_dataset)
         splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=0)
+        for file in os.listdir(path_dataset):
+            if file.endswith(".pdf"):
+                text, images = extract_content(path_dataset,  Path(file), path_artifacts)
 
-        for i, paper in tqdm(df.iterrows()):
-            chunks = splitter.split_text(paper["full_text"])
-            for chunk in chunks:
-                yield Document(page_content=chunk, metadata={"source" : f"doc_{i}"})
+                chunks = splitter.split_text(text)
+                for chunk in chunks:
+                    yield Document(page_content=chunk, metadata={"source" : file})
     document_generator = generate_documents_stream()
     training_docs = []
     training_dataset_size = 10000
@@ -143,7 +142,7 @@ def create_rag_pipeline(path_index: Path, path_model: Path = None):
 def create_args():
     parser = ArgumentParser()
     parser.add_argument("--own-domain", action="store_true")
-    parser.add_argument("--path-model", type=str, required=True)
+    parser.add_argument("--path-model", type=str)
     parser.add_argument("--path-dataset", type=str)
     parser.add_argument("--path-index", type=str, required=True)
     parser.add_argument("--query", type=str)
@@ -156,9 +155,9 @@ if __name__ == "__main__":
     path_model = args.path_model
     path_index = args.path_index
     path_dataset = args.path_dataset
-
+    path_artifacts = config["path_artifacts"]
     if not os.path.exists(path_index):
-        create_index(path_dataset=path_dataset, path_index=path_index, own_domain=own_domain)
+        create_index(path_dataset=path_dataset, path_index=path_index, own_domain=own_domain, path_artifacts=path_artifacts)
 
     chain = create_rag_pipeline(path_index, path_model)
     if args.query:

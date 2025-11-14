@@ -1,6 +1,5 @@
 langchain
 langchain-community
-faiss-gpu-cu12
 fastapi[standard]
 pandas
 tqdm
@@ -10,3 +9,6 @@ fastparquet
 langchain_huggingface
 langchain-google-genai
 python-dotenv
+unstructured
+faiss-cpu
+pdfminer-six
