@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import faiss
 from langchain_classic.chains.retrieval_qa.base import RetrievalQA
+from langchain_classic.retrievers import EnsembleRetriever
 from langchain_community.vectorstores import FAISS
 from dotenv import load_dotenv
 from pathlib import Path
@@ -26,6 +27,8 @@ from config import *
 config = get_config()
 #embedding_model_id = "gsarti/scibert-nli"
 embedding_model_id = config["embedding_model_id"]
+caption_embedding_model_id = config["caption_embedding_model_id"]
+
 k = config["k"]
 chunk_size = config["chunk_size"]
 
@@ -48,6 +51,29 @@ def create_vllm(path_model: Path):
 
     return llm
 
+def create_image_index (path_dataset: Path, path_images_index: Path, path_artifacts: Path):
+
+    def generate_image_stream():
+        for file in os.listdir(path_dataset):
+            if file.endswith(".pdf"):
+                _, images = extract_content(path_dataset,  Path(file), path_artifacts)
+
+                for image in images:
+                    yield Document(page_content=image["caption"], metadata={"source" : file, "image_path": image["image_path"]})
+    image_generator = generate_image_stream()
+    embeddings = HuggingFaceEmbeddings(
+        model_name=caption_embedding_model_id
+    )
+
+    vectorstore = FAISS.from_documents(list(image_generator), embeddings)
+    vectorstore.save_local(str(path_images_index))
+
+def load_image_index(path_image_index: Path):
+    embeddings = HuggingFaceEmbeddings(model_name=caption_embedding_model_id)
+    image_index = FAISS.load_local(path_image_index, embeddings, allow_dangerous_deserialization=True)
+    return image_index
+
+
 def create_index(path_dataset: Path, path_index: Path, own_domain: bool, path_artifacts: Path):
     print("creating index")
     def generate_documents_stream():
@@ -60,6 +86,7 @@ def create_index(path_dataset: Path, path_index: Path, own_domain: bool, path_ar
                 chunks = splitter.split_text(text)
                 for chunk in chunks:
                     yield Document(page_content=chunk, metadata={"source" : file})
+
     document_generator = generate_documents_stream()
     training_docs = []
     training_dataset_size = 10000
@@ -83,7 +110,7 @@ def create_index(path_dataset: Path, path_index: Path, own_domain: bool, path_ar
     training_vectors_np = np.array(training_vectors, dtype="float32")
     embedding_dimension = training_vectors_np.shape[1]
     assert embedding_dimension % m == 0
-    quantizer = faiss.IndexFlatL2(embedding_dimension)
+    #quantizer = faiss.IndexFlatL2(embedding_dimension)
 
     # Create the IndexIVFPQ
     faiss.IndexPQ()
@@ -123,28 +150,48 @@ def load_index(path_index: Path):
 
 def return_prompt():
 
+    prompt = PromptTemplate(template="Answer the following queContextstion based on the following documents and use the figures to support your answer. Document and figures :{context} Question{question}", input_variables=["context", "question"])
+    return prompt
+
+def return_image_retrieval_prompt():
     prompt = PromptTemplate(template="Answer the following question based on the context. Context:{context} Question{question}", input_variables=["context", "question"])
     return prompt
 
-def create_rag_pipeline(path_index: Path, path_model: Path = None):
+def load_image_retriever(path_index: Path):
+
+    embeddings_db = load_image_index(path_index)
+    retriever = embeddings_db.as_retriever(search_kwargs={"k": 3})
+    return retriever
+
+def load_text_retriever(path_index: Path):
+    embeddings_db = load_index(path_index)
+    retriever = embeddings_db.as_retriever(search_kwargs={"k": k})
+    return retriever
+
+def create_rag_pipeline(path_index: Path, path_image_index, path_model: Path = None):
     print("creating rag pipeline")
+    image_retriever = load_image_retriever(path_image_index)
+    text_retriever = load_text_retriever(path_index)
+
     if path_model:
         llm = create_vllm(path_model)
     else:
         llm = create_gemini_llm()
-
-    embeddings_db = load_index(path_index)
+    ensemble_retriever = EnsembleRetriever(
+        retrievers=[text_retriever, image_retriever],
+        weights=[0.8, 0.2] # Assign weights to each retriever
+    )
     prompt = return_prompt()
-    retriever = embeddings_db.as_retriever(search_kwargs={"k": k})
-    chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs={"prompt":prompt}, return_source_documents=True)
-    return chain
 
+    chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=ensemble_retriever, chain_type_kwargs={"prompt":prompt}, return_source_documents=True)
+    return chain
 def create_args():
     parser = ArgumentParser()
     parser.add_argument("--own-domain", action="store_true")
     parser.add_argument("--path-model", type=str)
     parser.add_argument("--path-dataset", type=str)
     parser.add_argument("--path-index", type=str, required=True)
+    parser.add_argument("--path-image-index", type=str, required=True)
     parser.add_argument("--query", type=str)
     return parser.parse_args()
 
@@ -154,15 +201,20 @@ if __name__ == "__main__":
     own_domain = args.own_domain
     path_model = args.path_model
     path_index = args.path_index
+    path_image_index = args.path_image_index
     path_dataset = args.path_dataset
     path_artifacts = config["path_artifacts"]
     if not os.path.exists(path_index):
         create_index(path_dataset=path_dataset, path_index=path_index, own_domain=own_domain, path_artifacts=path_artifacts)
 
-    chain = create_rag_pipeline(path_index, path_model)
+    if not os.path.exists(path_image_index):
+        create_image_index(path_dataset=path_dataset, path_images_index=path_image_index, path_artifacts=path_artifacts)
+
+    text_chain = create_rag_pipeline(path_index, path_image_index)
+
     if args.query:
-        query = args.query
-        answer = chain.run({"query": query})
+            query = args.query
+            answer = text_chain.invoke({"query": query})
 
     else:
         while True:
@@ -171,15 +223,18 @@ if __name__ == "__main__":
                 break
             else:
                 #print(answer)
-                answer = chain.run({"query": query})
-                retrieved_docs = chain.get_relevant_documents({"query": query})
-                print(f"Retrieved {len(retrieved_docs)} documents:")
-                for i, doc in enumerate(retrieved_docs):
-                    print(f"\n--- Document {i+1} ---")
-                    print(f"Content: {doc.page_content}")
-                    print(f"Metadata: {doc.metadata}")
-                answer = answer.split("<｜Assistant｜>")[1]
-                print(answer)
+                answer = text_chain.invoke({"query": query})
+
+                #retrieved_docs = text_chain.get_relevant_documents({"query": query})
+                # print(f"Retrieved {len(retrieved_docs)} documents:")
+                # for i, doc in enumerate(retrieved_docs):
+                #     print(f"\n--- Document {i+1} ---")
+                #     print(f"Content: {doc.page_content}")
+                #     print(f"Metadata: {doc.metadata}")
+                # print(answer["result"])
+                print(answer["result"])
+
+                print(answer["source_documents"])
 
 
 
