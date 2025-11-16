@@ -13,18 +13,25 @@ def init_ragchain(debug=False):
     if config["own_domain"]:
         path_index = config["path_index_own_domain"]
         path_dataset = config["path_dataset_own_domain"]
+        path_image_index = config["path_index_images"]
+        path_artifacts = config["path_artifacts"]
     else:
         path_index = config["path_index"]
         path_dataset = config["path_dataset"]
+        path_image_index = config["path_images"]
+        path_artifacts = config["path_artifacts"]
 
 
 
 
     print(f"loading  {path_index}")
     if not os.path.exists(path_index):
-        create_index( path_dataset=path_dataset, path_index=path_index, own_domain=config["own_domain"])
+        create_index( path_dataset=path_dataset, path_index=path_index, path_artifacts=path_artifacts)
+    print(f"loading  {path_image_index}")
+    if not os.path.exists(path_image_index):
+        create_image_index(path_dataset=path_dataset, path_images_index=path_image_index, path_artifacts=path_artifacts)
 
-    chain = create_rag_pipeline(path_index)
+    chain = create_rag_pipeline(path_index, path_image_index)
 chain = None
 init_ragchain()
 
@@ -33,19 +40,24 @@ app = FastAPI()
 @app.get("/chat")
 def read_item(q: Union[str, None] = None):
 
-    result = chain({"query": q})
-
-    print(f"Final Answer: {result['result']}")
-
-    print("\n--- Retrieved Source Documents ---")
-    for i, doc in enumerate(result['source_documents']):
-        print(f"\nDocument {i+1}:")
-        print(f"Content: {doc.page_content}")
-        print(f"Metadata: {doc.metadata}")
+    results = list(chain.stream(q))
 
 
 
-    return {"answer": result['result']}
+
+
+    answer = {}
+#    print(list(result))
+
+    for result in results:
+
+#        print(result)
+        if "output_a" in result and result["output_a"]:
+            answer["image_path"] = result["output_a"]
+        elif "output_b" in result:
+            answer["result"] = result["output_b"]["result"]
+    print(answer)
+    return answer
 
 
 

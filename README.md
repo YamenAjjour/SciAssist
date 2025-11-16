@@ -5,7 +5,7 @@ Gemini API or locally using an open source model such as a backbone to answer qu
 the rag system contains 72k papers from the [ACL Anthology](https://github.com/shauryr/ACL-anthology-corpus?tab=readme-ov-file). You can also supply your own Papers by adding a folder that contains the papers to the configuration under `path_dataset_own_domain`and setting `own_domain` to `True`. 
 The system is based on a central [configuration](scirag/config.yaml) where parameters such as the size of the paper chunks and the size of retrieved paper chunks are stored.
 
-![img_1.png](img_1.png)
+![img.png](img.png)
 
 
 ### RESTFUL API Server

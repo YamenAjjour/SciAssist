@@ -75,7 +75,7 @@ def load_image_index(path_image_index: Path):
     return image_index
 
 
-def create_index(path_dataset: Path, path_index: Path, own_domain: bool, path_artifacts: Path):
+def create_index(path_dataset: Path, path_index: Path, path_artifacts: Path):
     print("creating index")
     def generate_documents_stream():
 
@@ -162,12 +162,13 @@ def return_image_retrieval_prompt():
 
 def format_docs(docs):
 
-    return "\n\n".join(doc.metadata["image_path"] for doc in docs)
+    return "|".join(doc.metadata["image_path"] for doc in docs)
 
 def load_image_retriever(path_index: Path):
 
     embeddings_db = load_image_index(path_index)
-    retriever = embeddings_db.as_retriever(search_type="similarity_score_threshold",search_kwargs={'score_threshold': 0.000001})
+    #retriever = embeddings_db.as_retriever(search_type="similarity_score_threshold",search_kwargs={'score_threshold': 0.000001})
+    retriever = embeddings_db.as_retriever(search_kwargs={'k': 1})
     llm_compatible_chain=  retriever | RunnableLambda(lambda x :format_docs(x))         # Output: Single Context String
 
     return llm_compatible_chain
@@ -219,7 +220,7 @@ if __name__ == "__main__":
     path_dataset = args.path_dataset
     path_artifacts = config["path_artifacts"]
     if not os.path.exists(path_index):
-        create_index(path_dataset=path_dataset, path_index=path_index, own_domain=own_domain, path_artifacts=path_artifacts)
+        create_index(path_dataset=path_dataset, path_index=path_index, path_artifacts=path_artifacts)
 
     if not os.path.exists(path_image_index):
         create_image_index(path_dataset=path_dataset, path_images_index=path_image_index, path_artifacts=path_artifacts)
@@ -237,7 +238,7 @@ if __name__ == "__main__":
                 break
             else:
                 #print(answer)
-                answer = text_chain.stream( query)
+                answers = text_chain.stream( query)
 
                 #retrieved_docs = text_chain.get_relevant_documents({"query": query})
                 # print(f"Retrieved {len(retrieved_docs)} documents:")
@@ -246,9 +247,10 @@ if __name__ == "__main__":
                 #     print(f"Content: {doc.page_content}")
                 #     print(f"Metadata: {doc.metadata}")
                     # print(answer["result"])
-                for key, value in answer:
 
-                    print(value)
+                for answer in list(answers):
+                    for key, value in answer.items():
+                        print(value)
 
 
 

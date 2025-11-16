@@ -66,7 +66,7 @@ def extract_content(path_folder: Path, file_name: Path, path_image_output_dir: P
                 caption = raw_pdf_elements[i+1].text
 
             images.append({
-                "image_path": f"{path_file_image_output}/{image_path}",
+                "image_path": f"{image_path}",
                 "caption": caption,
                 "element_id": element.id
             })

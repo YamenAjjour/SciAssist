@@ -12,3 +12,4 @@ python-dotenv
 unstructured
 faiss-cpu
 pdfminer-six
+streamlit
