@@ -9,6 +9,7 @@ from langchain_community.vectorstores import FAISS
 from dotenv import load_dotenv
 from pathlib import Path
 
+from langchain_core.runnables import RunnableParallel, RunnablePassthrough, RunnableLambda
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -150,41 +151,54 @@ def load_index(path_index: Path):
 
 def return_prompt():
 
-    prompt = PromptTemplate(template="Answer the following queContextstion based on the following documents and use the figures to support your answer. Document and figures :{context} Question{question}", input_variables=["context", "question"])
+    prompt = PromptTemplate(template="""Answer the following question based based on the following documents
+     and use the figures to support your answer. Document :{context} Question {question}"""
+                            , input_variables=["context", "question"])
     return prompt
 
 def return_image_retrieval_prompt():
     prompt = PromptTemplate(template="Answer the following question based on the context. Context:{context} Question{question}", input_variables=["context", "question"])
     return prompt
 
+def format_docs(docs):
+
+    return "\n\n".join(doc.metadata["image_path"] for doc in docs)
+
 def load_image_retriever(path_index: Path):
 
     embeddings_db = load_image_index(path_index)
-    retriever = embeddings_db.as_retriever(search_kwargs={"k": 3})
-    return retriever
+    retriever = embeddings_db.as_retriever(search_type="similarity_score_threshold",search_kwargs={'score_threshold': 0.000001})
+    llm_compatible_chain=  retriever | RunnableLambda(lambda x :format_docs(x))         # Output: Single Context String
+
+    return llm_compatible_chain
 
 def load_text_retriever(path_index: Path):
     embeddings_db = load_index(path_index)
     retriever = embeddings_db.as_retriever(search_kwargs={"k": k})
+
+
+
     return retriever
+
 
 def create_rag_pipeline(path_index: Path, path_image_index, path_model: Path = None):
     print("creating rag pipeline")
     image_retriever = load_image_retriever(path_image_index)
     text_retriever = load_text_retriever(path_index)
-
     if path_model:
         llm = create_vllm(path_model)
     else:
         llm = create_gemini_llm()
-    ensemble_retriever = EnsembleRetriever(
-        retrievers=[text_retriever, image_retriever],
-        weights=[0.8, 0.2] # Assign weights to each retriever
-    )
+
     prompt = return_prompt()
 
-    chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=ensemble_retriever, chain_type_kwargs={"prompt":prompt}, return_source_documents=True)
-    return chain
+    chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=text_retriever, chain_type_kwargs={"prompt":prompt}, return_source_documents=True)
+    concatenated_chain = RunnableParallel(
+        output_a=image_retriever,
+        output_b=chain
+    )
+
+    return concatenated_chain
 def create_args():
     parser = ArgumentParser()
     parser.add_argument("--own-domain", action="store_true")
@@ -214,8 +228,8 @@ if __name__ == "__main__":
 
     if args.query:
             query = args.query
-            answer = text_chain.invoke({"query": query})
-
+            answer = text_chain.stream( query)
+            print(list(answer))
     else:
         while True:
             query = input("Enter query or exit to exit:")
@@ -223,7 +237,7 @@ if __name__ == "__main__":
                 break
             else:
                 #print(answer)
-                answer = text_chain.invoke({"query": query})
+                answer = text_chain.stream( query)
 
                 #retrieved_docs = text_chain.get_relevant_documents({"query": query})
                 # print(f"Retrieved {len(retrieved_docs)} documents:")
@@ -231,10 +245,10 @@ if __name__ == "__main__":
                 #     print(f"\n--- Document {i+1} ---")
                 #     print(f"Content: {doc.page_content}")
                 #     print(f"Metadata: {doc.metadata}")
-                # print(answer["result"])
-                print(answer["result"])
+                    # print(answer["result"])
+                for key, value in answer:
 
-                print(answer["source_documents"])
+                    print(value)
 
 
 
