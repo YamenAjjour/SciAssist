@@ -1,6 +1,6 @@
 # SciAssist
 
-SciAssist a question answering system for NLP Papers that is implemented using Retrieval Augmented Generation. It can be deployed using 
+SciAssist a multimodal question answering system for NLP Papers that is implemented using Retrieval Augmented Generation. It can be deployed using 
 Gemini API or locally using an open source model such as a backbone to answer questions on scientific NLP Papers. The paper pool that the underlines 
 the rag system contains 72k papers from the [ACL Anthology](https://github.com/shauryr/ACL-anthology-corpus?tab=readme-ov-file). You can also supply your own Papers by adding a folder that contains the papers to the configuration under `path_dataset_own_domain`and setting `own_domain` to `True`. 
 The system is based on a central [configuration](scirag/config.yaml) where parameters such as the size of the paper chunks and the size of retrieved paper chunks are stored.
