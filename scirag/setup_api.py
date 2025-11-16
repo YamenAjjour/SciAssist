@@ -53,7 +53,8 @@ def read_item(q: Union[str, None] = None):
 
 #        print(result)
         if "output_a" in result and result["output_a"]:
-            answer["image_path"] = result["output_a"]
+            answer["image_path"] = result["output_a"].split("+")[0]
+            answer["image_caption"] = result["output_a"].split("+")[1]
         elif "output_b" in result:
             answer["result"] = result["output_b"]["result"]
     print(answer)

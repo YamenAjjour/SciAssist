@@ -162,7 +162,7 @@ def return_image_retrieval_prompt():
 
 def format_docs(docs):
 
-    return "|".join(doc.metadata["image_path"] for doc in docs)
+    return "|".join(doc.metadata["image_path"]+"+"+doc.page_content for doc in docs)
 
 def load_image_retriever(path_index: Path):
 

@@ -12,20 +12,23 @@ def answer_question():
     data = response.json()       # Parses JSON directly
     response = data.get("result")
     image_path = data.get("image_path")
+    image_caption = data.get("image_caption")
     st.session_state.answer=response    # Use .get() for safer dictionary access
     if image_path:
         st.session_state.image_path= image_path
-
+        st.session_state.image_caption = image_caption
 st.title("SciAssist")
 
 if "image_path" not in st.session_state:
     st.session_state.image_path= None
 
+if "image_caption" not in st.session_state:
+    st.session_state.image_caption = None
 
 with st.form('question_form'):
     st.text_input(label='Question:', value='Enter your Question',key="question")
     st.text_area(label="Answer", height=400, key="answer")
     image_placeholder = st.empty()
     if st.session_state.image_path:
-        image_placeholder.image(st.session_state.image_path)
+        image_placeholder.image(image=st.session_state.image_path, caption=st.session_state.image_caption)
     st.form_submit_button('Ask', on_click=answer_question)
