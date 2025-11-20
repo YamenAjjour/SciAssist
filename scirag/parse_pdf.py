@@ -1,11 +1,14 @@
 import os
+import time
+
 import pandas as pd
 from pypdf import PdfReader
 from typing import List
 from pathlib import Path
+from config import *
 from unstructured.partition.pdf import partition_pdf
 from unstructured.documents.elements import Image, FigureCaption, Table
-
+from tqdm import tqdm
 from urllib.request import urlretrieve
 def preprocess_and_clean_files(documents_path: Path) -> pd.DataFrame:
 
@@ -26,7 +29,7 @@ def download_files(path_dataset: Path, path_dataset_cache: Path):
     df = pd.read_parquet(path_dataset)
     if not os.path.exists(path_dataset_cache):
         os.mkdir(path_dataset_cache)
-    for i, rec in df.iterrows():
+    for i, rec in tqdm(df.iterrows()):
         if not rec["url"].endswith(".pdf"):
             url =  rec["url"] +".pdf"
         else:
@@ -34,6 +37,7 @@ def download_files(path_dataset: Path, path_dataset_cache: Path):
             file = path_dataset_cache / rec["acl_id"] + ".pdf"
             print(url)
             urlretrieve(url, file)
+            time.sleep(1)
 
 
 def extract_content(path_folder: Path, file_name: Path, path_image_output_dir: Path):
@@ -75,3 +79,7 @@ def extract_content(path_folder: Path, file_name: Path, path_image_output_dir: P
         else:
             text+= element.text
     return text, images
+
+if __file__ == "__main__":
+    conf = get_config()
+    pages = download_files(Path(conf["path_dataset"]), Path(conf["path_dataset_cache"]))
